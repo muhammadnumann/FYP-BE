@@ -61,7 +61,7 @@ export const login = async (req: Request, res: Response) => {
 
         return res.status(200).json({
           success: true,
-          user: { email: user.email, id: user._id, type: user.type, name: userDetail?.accountName },
+          user: { email: user.email, id: user._id, type: user.type, name: userDetail?.accountName, },
           userAuthToken: jwtToken,
           message: 'Successfully Added'
         });

@@ -6,7 +6,7 @@ import bcryptjs from 'bcryptjs';
 
 
 export const AddAccount = async (req: Request, res: Response) => {
-  const { email, password, type, accountName } = req.body;
+  const { email, password, type, accountName, phoneNo, age, gender } = req.body;
 
   console.log('Add account')
 
@@ -23,19 +23,19 @@ export const AddAccount = async (req: Request, res: Response) => {
     } else {
       const createdUser = new Credentials({ email, password: HASHED_PASSWORD, type })
       await createdUser.save();
-      const createdAccount = new Accounts({ accountName, credentialId: createdUser._id })
+      const createdAccount = new Accounts({ accountName, phoneNo, age, credentialId: createdUser._id })
       await createdAccount.save();
 
       logger.log({
         level: 'debug',
-        message: 'Admin is successfully Added.',
+        message: 'User is successfully Added.',
         consoleLoggerOptions: { label: 'API' }
       });
       return res.status(200).json({
         success: true,
         userId: createdUser._id,
         admin: createdAccount.toJSON(),
-        message: 'Admin is successfully Added.'
+        message: 'User is successfully Added.'
       });
     }
   } catch (e) {
@@ -66,6 +66,9 @@ export const getAllAccounts = async (req: Request, res: Response) => {
       "$project": {
         "_id": 1,
         "accountName": 1,
+        "phoneNo": 1,
+        "age": 1,
+        "gender": 1,
         "credentialId": 1,
         "createdAt": 1,
         "updatedAt": 1,

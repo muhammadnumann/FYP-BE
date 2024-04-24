@@ -16,6 +16,9 @@ interface IAccountsModel extends Model<IAccounts> { }
 
 const schema = new Schema<IAccounts>({
   accountName: { type: String, required: true },
+  phoneNo: { type: String, required: true },
+  age: { type: String, required: true },
+  gender: { type: String, required: true },
   credentialId: { type: Schema.Types.ObjectId, ref: "credentials", required: true }
 });
 
