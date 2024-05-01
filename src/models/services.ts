@@ -12,7 +12,7 @@ const schema = new Schema<Iservices>({
   orignalFileName: { type: String, },
   fileName: { type: String },
   filePath: { type: String, required: true },
-  sections: [{ type: Schema.Types.ObjectId, ref: "accounts", required: true }]
+  userId: [{ type: Schema.Types.ObjectId, ref: "accounts", required: true }]
 });
 
 schema.plugin(TimeStampPlugin);

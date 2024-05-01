@@ -6,10 +6,10 @@ import { upload } from '../../middleware/fileUpload';
 // Set up multer middleware
 const router = Router();
 
-router.route('').get(sectioncontroller.servicesList);
-router.route('/add').post(upload.single('audio'), sectioncontroller.AddSections);
-router.route('/edit').post(authMiddleware.isAuthorized, upload.single('sectionImage'), sectioncontroller.EditSection);
-router.route('/*').get(sectioncontroller.FindOneSection);
-router.route('/*').delete(authMiddleware.isAuthorized, sectioncontroller.DeleteSection);
+router.route('').get(authMiddleware.isAdmin, sectioncontroller.servicesList);
+router.route('/list').get(authMiddleware.isAuthorized, sectioncontroller.servicesList);
+router.route('/add').post(authMiddleware.isAuthorized, upload.single('file'), sectioncontroller.addService);
+router.route('/*').get(authMiddleware.isAuthorized, sectioncontroller.FindOneService);
+router.route('/*').delete(authMiddleware.isAuthorized, sectioncontroller.DeleteService);
 
 export default router

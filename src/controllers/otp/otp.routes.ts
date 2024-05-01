@@ -3,7 +3,7 @@ import * as OTP from './otp.controller';
 
 const router = Router();
 
-router.get('/sendOTP', OTP.sendOTP);
-router.get('/verifyOTP', OTP.verifyOTP);
+router.post('/sendOTP', OTP.sendOTP);
+router.post('/verifyOTP', OTP.verifyOTP);
 
 export default router;

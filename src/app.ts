@@ -4,6 +4,7 @@ import cors from 'cors'
 import path from 'path'
 import cookieParser from 'cookie-parser'
 import routes from './routes';
+
 const PORT = process.env.PORT || 3500;
 
 const app = express();
@@ -19,6 +20,8 @@ app.use('/uploads', express.static('uploads'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
 
 app.use(routes);
 
