@@ -27,9 +27,10 @@ export const servicesList = async (req: Request, res: Response) => {
 
 export const AddSections = async (req: Request, res: Response) => {
     // const { sectionTitle, sectionDescription } = req.body;
-    console.log(req.file)
-    let sectionImage = req.file?.path;
-    res.status(404).json({ rex: "succesfull" });
+    // console.log(req.body)
+    // console.log(req.query)
+    console.log(req.files)
+    res.status(404).json({ message: "succesfull" });
 
     // const section = new Section({
     //     sectionTitle: sectionTitle,

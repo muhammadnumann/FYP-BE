@@ -7,7 +7,7 @@ import upload from '../../middleware/fileUpload';
 const router = Router();
 
 router.route('').get(sectioncontroller.servicesList);
-router.route('/add').post(sectioncontroller.AddSections);
+router.route('/add').post(upload.single('image'), sectioncontroller.AddSections);
 router.route('/edit').post(authMiddleware.isAuthorized, upload.single('sectionImage'), sectioncontroller.EditSection);
 router.route('/*').get(sectioncontroller.FindOneSection);
 router.route('/*').delete(authMiddleware.isAuthorized, sectioncontroller.DeleteSection);
