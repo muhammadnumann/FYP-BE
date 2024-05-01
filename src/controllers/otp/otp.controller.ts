@@ -1,6 +1,7 @@
-const Otps = require('../../models/otp')
+import Otps from "../../models/otp";
+import sendEmail from "../../utils/sendEmails";
+
 const randomstring = require('randomstring');
-const sendEmail = require('../../utils/sendEmails');
 
 // Generate OTP
 function generateOTP() {
@@ -13,7 +14,7 @@ function generateOTP() {
 // Send OTP to the provided email
 const sendOTP = async (req: any, res: any, next: any) => {
     try {
-        const { email } = req.query;
+        const { email } = req.body;
         const otp = generateOTP(); // Generate a 6-digit OTP
         const newOTP = new Otps({ email, otp });
         await newOTP.save();
@@ -35,8 +36,11 @@ const sendOTP = async (req: any, res: any, next: any) => {
 // Verify OTP provided by the user
 const verifyOTP = async (req: any, res: any, next: any) => {
     try {
-        const { email, otp } = req.query;
+        const { email, otp } = req.body;
         const existingOTP = await Otps.findOneAndDelete({ email, otp });
+
+        console.log(req.body)
+        console.log(existingOTP)
 
         if (existingOTP) {
             // OTP is valid

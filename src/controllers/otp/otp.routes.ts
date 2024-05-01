@@ -1,9 +1,9 @@
-const express = require('express');
-const { sendOTP, verifyOTP } = require('./otp.controller');
+import { Router } from 'express';
+import * as OTP from './otp.controller';
 
-const router = express.Router();
+const router = Router();
 
-router.get('/sendOTP', sendOTP);
-router.get('/verifyOTP', verifyOTP);
+router.get('/sendOTP', OTP.sendOTP);
+router.get('/verifyOTP', OTP.verifyOTP);
 
 export default router;

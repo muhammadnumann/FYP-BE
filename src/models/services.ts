@@ -1,22 +1,22 @@
 import { Schema, model } from 'mongoose';
 import TimeStampPlugin, { ITimeStampedDocument } from './plugins/timestamp-plugin';
-import { ISection } from './section';
 
 export interface Iservices extends ITimeStampedDocument {
   /** Name of the BLog Title */
-  _doc: any;
-  servicename: string;
-  slug: string;
-  sections: any[];
+  orignalFileName: string;
+  fileName: string;
+  filePath: string;
+
 }
 const schema = new Schema<Iservices>({
-  servicename: { type: String, },
-  slug: { type: String },
-  sections: [{ type: Schema.Types.ObjectId, ref: 'Section' }]
+  orignalFileName: { type: String, },
+  fileName: { type: String },
+  filePath: { type: String, required: true },
+  sections: [{ type: Schema.Types.ObjectId, ref: "accounts", required: true }]
 });
 
 schema.plugin(TimeStampPlugin);
 
 const Services = model<Iservices>('tbl-services', schema);
 
-export default Services;
+export default Services

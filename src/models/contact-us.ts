@@ -28,6 +28,6 @@ const schema = new Schema<IContactUs>({
 // Add timestamp plugin for createdAt and updatedAt in miliseconds from epoch
 schema.plugin(TimeStampPlugin);
 
-const ContactUs: IContactUsModel = model<IContactUs, IContactUsModel>('tbl-cntactus', schema);
+const ContactUs: IContactUsModel = model<IContactUs, IContactUsModel>('tbl-contactus', schema);
 
 export default ContactUs;

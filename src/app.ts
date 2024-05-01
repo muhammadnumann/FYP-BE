@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3500;
 
 const app = express();
 app.use(cookieParser());
-app.use(json())
+app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors({
     origin: '*',

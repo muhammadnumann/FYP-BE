@@ -8,7 +8,7 @@ import bcryptjs from 'bcryptjs';
 export const AddAccount = async (req: Request, res: Response) => {
   const { email, password, type, accountName, phoneNo, age, gender } = req.body;
 
-  console.log('Add account')
+  console.log(req.body)
 
   const saltRounds = 10;
   const HASHED_PASSWORD = bcryptjs.hashSync(password, saltRounds);
@@ -23,7 +23,7 @@ export const AddAccount = async (req: Request, res: Response) => {
     } else {
       const createdUser = new Credentials({ email, password: HASHED_PASSWORD, type })
       await createdUser.save();
-      const createdAccount = new Accounts({ accountName, phoneNo, age, credentialId: createdUser._id })
+      const createdAccount = new Accounts({ accountName, phoneNo, age, credentialId: createdUser._id, gender })
       await createdAccount.save();
 
       logger.log({

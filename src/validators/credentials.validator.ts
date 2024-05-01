@@ -7,14 +7,12 @@ export const signup = async (req: Request, res: Response, next: () => void) => {
       .email()
       .required()
       .label('email'),
-    password: req.body.type == 'store' ? Joi.string().optional().label('password') : Joi.string().required().label('password'),
-    storeInfo: req.body.type == 'store' ? Joi.object().required().label('storeInfo') : Joi.string().optional().label('storeInfo'),
-    storeId: req.body.type == 'store' ? Joi.string().required().label('storeId') : Joi.string().optional().label('storeId'),
+    password: Joi.string().required().label('password'),
     type: Joi.string().required().label('type'),
-    storeName: req.body.type === 'store' ? Joi.string().required().label('storeName') : Joi.string().optional().label('storeName'),
-    adminName: req.body.type === 'admin' ? Joi.string().required().label('adminName') : Joi.string().optional().label('adminName'),
-    ngoName: req.body.type === 'ngo' ? Joi.string().required().label('ngoName') : Joi.string().optional().label('ngoName'),
-    description: req.body.type === 'ngo' ? Joi.string().required().label('description') : Joi.string().optional().label('description'),
+    accountName: Joi.string().required().label('type'),
+    phoneNo: Joi.string().required().label('type'),
+    age: Joi.string().required().label('type'),
+    gender: Joi.string().required().label('type'),
   });
   const { error } = schema.validate(req.body);
   if (error) {
