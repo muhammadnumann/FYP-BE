@@ -28,7 +28,7 @@ export const login = async (req: Request, res: Response) => {
         message: 'Account Does Note Exist',
         consoleLoggerOptions: { label: 'API' }
       });
-      return res.status(200).json({
+      return res.status(404).json({
         success: false,
         message: 'Account Does Note Exist'
       });
@@ -40,7 +40,7 @@ export const login = async (req: Request, res: Response) => {
           message: "Password is Incorrect",
           consoleLoggerOptions: { label: 'API' }
         });
-        return res.status(200).json({
+        return res.status(404).json({
           success: false,
           message: "Password is Incorrect"
         });
