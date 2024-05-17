@@ -22,7 +22,7 @@ export const addAdminCredentials = async () => {
         else {
             const createdUser = new Credentials({ email, password: HASHED_PASSWORD, type })
             await createdUser.save();
-            const createdAccount = new Accounts({ accountName, phoneNo, age, credentialId: createdUser._id, gender })
+            const createdAccount = new Accounts({ accountName, email, phoneNo, age, credentialId: createdUser._id, gender })
             await createdAccount.save();
 
             logger.log({

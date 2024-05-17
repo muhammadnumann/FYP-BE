@@ -10,6 +10,9 @@ export interface IAccounts extends ITimeStampedDocument {
   accountName: string;
   /** credentialId from Credentials collection */
   credentialId: Schema.Types.ObjectId;
+
+  isDeleted: boolean;
+
 }
 
 interface IAccountsModel extends Model<IAccounts> { }
@@ -17,9 +20,10 @@ interface IAccountsModel extends Model<IAccounts> { }
 const schema = new Schema<IAccounts>({
   accountName: { type: String, required: true },
   phoneNo: { type: String, required: true },
+  email: { type: String, required: true },
   age: { type: String, required: true },
   gender: { type: String, required: true },
-  credentialId: { type: Schema.Types.ObjectId, ref: "credentials", required: true }
+  credentialId: { type: Schema.Types.ObjectId, ref: "credentials", required: true },
 });
 
 // Add timestamp plugin for createdAt and updatedAt in miliseconds from epoch

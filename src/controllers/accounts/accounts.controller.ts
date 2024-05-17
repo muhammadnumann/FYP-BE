@@ -3,10 +3,9 @@ import Credentials from '../../models/Credentials';
 import Accounts from '../../models/Accounts';
 import logger from '../../logger';
 import bcryptjs from 'bcryptjs';
-import { generateOTP } from '../otp/otp.controller';
-import Otps from '../../models/otp';
-import sendEmail from '../../utils/sendEmails';
-import { createToken } from '../../helpers/jwt.helper';
+import { createToken, verifyToken } from '../../helpers/jwt.helper';
+import { Mongoose } from 'mongoose';
+const mongoose = require('mongoose');
 
 
 export const AddAccount = async (req: Request, res: Response) => {
@@ -27,32 +26,45 @@ export const AddAccount = async (req: Request, res: Response) => {
     } else {
       const createdUser = new Credentials({ email, password: HASHED_PASSWORD, type })
       await createdUser.save();
-      const createdAccount = new Accounts({ accountName, phoneNo, age, credentialId: createdUser._id, gender })
-      await createdAccount.save();
 
+      const update = await Accounts.updateOne(
+        { email: email },
+        {
+          $set: {
+            isDeleted: false,
+            credentialId: createdUser._id
+          }
+        }
+      )
+      if (!update.nModified) {
+        const createdAccount = new Accounts({ accountName, email, phoneNo, age, credentialId: createdUser._id, gender })
+        await createdAccount.save();
+
+        logger.log({
+          level: 'debug',
+          message: 'User is successfully Added.',
+          consoleLoggerOptions: { label: 'API' }
+        });
+        const tokenObj = {
+          uid: createdUser.id,
+        };
+        const jwtToken = await createToken(tokenObj);
+        return res.status(200).json({
+          success: true,
+          accountData: { email: email, id: createdUser._id, type: createdUser.type, name: accountName, },
+          userAuthToken: jwtToken,
+          message: 'User is successfully Added.'
+        });
+      }
       logger.log({
         level: 'debug',
         message: 'User is successfully Added.',
         consoleLoggerOptions: { label: 'API' }
       });
-
-      // const otp = generateOTP(); // Generate a 6-digit OTP
-      // const newOTP = new Otps({ email, otp });
-      // await newOTP.save();
-
-      // // Send OTP via email
-      // await sendEmail({
-      //   to: email,
-      //   subject: 'Your OTP',
-      //   message: `<p>Your OTP is: <strong>${otp}</strong></p>`,
-      // });
-
       const tokenObj = {
         uid: createdUser.id,
       };
       const jwtToken = await createToken(tokenObj);
-
-
       return res.status(200).json({
         success: true,
         accountData: { email: email, id: createdUser._id, type: createdUser.type, name: accountName, },
@@ -75,59 +87,79 @@ export const AddAccount = async (req: Request, res: Response) => {
 
 export const getAllAccounts = async (req: Request, res: Response) => {
   console.log('Get all Account')
-  try {
-    const accounts = await Accounts.aggregate([{
-      $lookup: {
-        'from': 'credentials',
-        'localField': 'credentialId',
-        'foreignField': '_id',
-        'as': 'credentialDetails'
-      }
-    },
-    {
-      "$project": {
-        "_id": 1,
-        "accountName": 1,
-        "phoneNo": 1,
-        "age": 1,
-        "gender": 1,
-        "credentialId": 1,
-        "createdAt": 1,
-        "updatedAt": 1,
-        "credentialDetails.email": 1
-      }
-    }
-    ])
-    logger.log({
-      level: 'debug',
-      message: 'Getting all admins list.',
-      consoleLoggerOptions: { label: 'API' }
-    });
-    return res.status(200).json({
-      success: true,
-      accounts
-    });
-  } catch (e) {
-    logger.error({
-      level: 'debug',
-      message: `Internal Server Error occurred while Getting all admins list., ${e}`,
-      consoleLoggerOptions: { label: 'API' }
-    });
-    return res.status(500).json({
-      success: false,
-      message: 'Internal Server Error occurred while Getting all admins list.'
-    });
-  }
-};
 
+  if (req.headers.authorization) {
+    try {
+      const token = req.headers.authorization.split(' ')[1];
+      const decodedToken: any = await verifyToken(token);
+
+      // Assuming the decodedToken contains the credentialId
+      const currentCredentialId = decodedToken.uid;
+      const accounts = await Accounts.aggregate([
+        {
+          $lookup: {
+            from: 'tbl-credentials',
+            localField: 'credentialId',
+            foreignField: '_id',
+            as: 'credentialDetails'
+          }
+        },
+        {
+          $match: {
+            credentialId: { $ne: new mongoose.Types.ObjectId(currentCredentialId) },
+            isDeleted: { $ne: true }
+          }
+        },
+        {
+          $project: {
+            _id: 1,
+            accountName: 1,
+            phoneNo: 1,
+            age: 1,
+            gender: 1,
+            credentialId: 1,
+            createdAt: 1,
+            isDeleted: 1,
+            email: 1,
+            updatedAt: 1,
+          }
+        }
+      ]);
+      logger.log({
+        level: 'debug',
+        message: 'Getting all admins list.',
+        consoleLoggerOptions: { label: 'API' }
+      });
+      return res.status(200).json({
+        success: true,
+        accounts
+      });
+    } catch (e) {
+      logger.error({
+        level: 'debug',
+        message: `Internal Server Error occurred while Getting all admins list., ${e}`,
+        consoleLoggerOptions: { label: 'API' }
+      });
+      return res.status(500).json({
+        success: false,
+        message: 'Internal Server Error occurred while Getting all admins list.'
+      });
+    }
+  };
+}
 export const DeleteAccount = async (req: Request, res: Response) => {
   const { id } = req.body;
 
   console.log('Delete account')
 
-
   try {
-    const del = await Accounts.deleteOne({ _id: id })
+    const account = await Accounts.updateOne(
+      { credentialId: id },
+      { $set: { isDeleted: true } }
+    )
+    console.log(account)
+    // const del = await Accounts.deleteOne({ _id: id })
+    const del = await Credentials.deleteOne({ _id: id })
     return res.status(200).json(
       del
     );
