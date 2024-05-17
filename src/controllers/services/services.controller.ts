@@ -3,39 +3,23 @@ import logger from '../../logger';
 import Services from '../../models/services';
 const { spawnSync } = require('child_process');
 
+
 export const servicesList = async (req: Request, res: Response) => {
     console.log("Services List")
+    console.log(req.body)
+    const { userId, pageNo, pageSize = 5 } = req.body;
+
+    const skip = (pageNo - 1) * pageSize;
     try {
-        const services = await Services.find()
+        const services = await Services.find({ userId }).skip(skip)
+            .limit(pageSize);
+
         return res.status(200).json({
             total: services.length,
+            success: true,
+            message: 'Fetch Successfully',
             services
-        }
-        );
-    } catch (error) {
-        logger.error({
-            level: 'debug',
-            message: `${'Cant Find'} , ${error}`,
-            consoleLoggerOptions: { label: 'API' }
-        });
-        return res.status(404).json({
-            success: false,
-            message: 'Cant Find'
-        });
-    }
-
-};
-
-export const userServicesList = async (req: Request, res: Response) => {
-    const { id } = req.body
-    console.log("user Services List")
-    try {
-        const services = await Services.find({ userId: id })
-        return res.status(200).json({
-            total: services.length,
-            services
-        }
-        );
+        })
     } catch (error) {
         logger.error({
             level: 'debug',
@@ -52,33 +36,36 @@ export const userServicesList = async (req: Request, res: Response) => {
 
 export const addService = async (req: Request, res: Response) => {
 
-    const python = spawnSync('python',
-        [__dirname + '/script.py'],
-        { input: 'write this to stdin' });
-    if (python.status !== 0) {
-        process.stderr.write(python.stderr);
-        process.exit(python.status);
-    } else {
-        process.stdout.write(python.stdout);
-        process.stderr.write(python.stderr);
-    }
+    // const python = spawnSync('python',
+    //     [__dirname + '/script.py'],
+    //     { input: 'write this to stdin' });
+    // if (python.status !== 0) {
+    //     process.stderr.write(python.stderr);
+    //     process.exit(python.status);
+    // } else {
+    //     process.stdout.write(python.stdout);
+    //     process.stderr.write(python.stderr);
+    // }
+    // python
 
-
-    python
     const { userId } = req.body;
+    console.log(userId)
+    console.log(req?.file)
     try {
-
         const section = new Services({
             orignalFileName: req?.file?.originalname,
             fileName: req?.file?.filename,
             filePath: req?.file?.destination,
-            // filePath: req?.file?.path: ,
             userId: userId,
-        });
-
-
-
-        res.status(404).json(req.file);
+        })
+        section.save()
+        res.status(200).json(
+            {
+                success: true,
+                message: 'Add Successfully',
+                audio: section
+            }
+        );
 
     } catch (err) {
         res.status(500).send(err);
@@ -90,17 +77,18 @@ export const FindOneService = async (req: Request, res: Response) => {
     const id = req.params['0']
     try {
 
-        const service = Services.findById(id)
+        const service = await Services.findById(id)
+        console.log(service)
         if (!service) {
             return res.status(404).json({
                 success: false,
-                message: `Can't Find`
+                message: `Can't Find audio`
             });
         } else {
             return res.status(202).json({
                 success: true,
                 message: `succesfully found`,
-                data: service
+                audio: service
             });
         }
 
@@ -122,7 +110,8 @@ export const DeleteService = async (req: Request, res: Response) => {
     const id = req.params['0'];
     try {
 
-        const service = Services.findByIdAndDelete(id)
+        const service = await Services.findByIdAndDelete(id)
+        console.log(service)
         if (!service) {
             return res.status(404).json({
                 success: false,
@@ -138,12 +127,12 @@ export const DeleteService = async (req: Request, res: Response) => {
     } catch (error) {
         logger.error({
             level: 'debug',
-            message: `${'Cant Find'} , ${error}`,
+            message: `${"Can't Find"} , ${error}`,
             consoleLoggerOptions: { label: 'API' }
         });
         return res.status(404).json({
             success: false,
-            message: 'Cant Find'
+            message: "Can't Find"
         });
     }
 };

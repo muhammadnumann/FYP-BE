@@ -88,43 +88,21 @@ export const AddAccount = async (req: Request, res: Response) => {
 export const getAllAccounts = async (req: Request, res: Response) => {
   console.log('Get all Account')
 
+  const { pageNo, pageSize = 5 } = req.body;
+  const skip = (pageNo - 1) * pageSize; 
   if (req.headers.authorization) {
     try {
       const token = req.headers.authorization.split(' ')[1];
       const decodedToken: any = await verifyToken(token);
 
-      // Assuming the decodedToken contains the credentialId
+
       const currentCredentialId = decodedToken.uid;
-      const accounts = await Accounts.aggregate([
-        {
-          $lookup: {
-            from: 'tbl-credentials',
-            localField: 'credentialId',
-            foreignField: '_id',
-            as: 'credentialDetails'
-          }
-        },
-        {
-          $match: {
-            credentialId: { $ne: new mongoose.Types.ObjectId(currentCredentialId) },
-            isDeleted: { $ne: true }
-          }
-        },
-        {
-          $project: {
-            _id: 1,
-            accountName: 1,
-            phoneNo: 1,
-            age: 1,
-            gender: 1,
-            credentialId: 1,
-            createdAt: 1,
-            isDeleted: 1,
-            email: 1,
-            updatedAt: 1,
-          }
-        }
-      ]);
+      const accounts = await Accounts.find({
+        credentialId: { $ne: new mongoose.Types.ObjectId(currentCredentialId) },
+        isDeleted: { $ne: true }
+      }).skip(skip)
+        .limit(pageSize);
+      ;
       logger.log({
         level: 'debug',
         message: 'Getting all admins list.',

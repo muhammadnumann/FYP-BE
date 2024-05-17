@@ -5,14 +5,11 @@ export interface Iservices extends ITimeStampedDocument {
   /** Name of the BLog Title */
   orignalFileName: string;
   fileName: string;
-  filePath: string;
-
 }
 const schema = new Schema<Iservices>({
-  orignalFileName: { type: String, },
+  orignalFileName: { type: String },
   fileName: { type: String },
-  filePath: { type: String, required: true },
-  userId: [{ type: Schema.Types.ObjectId, ref: "accounts", required: true }]
+  userId: { type: Schema.Types.ObjectId, ref: "credentials", required: true }
 });
 
 schema.plugin(TimeStampPlugin);

@@ -1,5 +1,7 @@
 /* eslint-disable import/first */
 import dotenv from 'dotenv';
+import path from "path"
+import fs from "fs"
 
 const result = dotenv.config();
 if (result.error) {
@@ -36,6 +38,26 @@ const safeMongooseConnection = new SafeMongooseConnection({
     }),
     onConnectionRetry: mongoUrl => logger.info(`Retrying to MongoDB at ${mongoUrl}`)
 });
+
+app.get('/files/:filename', (req, res) => {
+    const filename = req.params.filename;
+    console.log(filename)
+    const filePath = path.join(__dirname, '..', 'uploads', filename);
+
+    console.log(filePath)
+    // Check if the file exists
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+        if (err) {
+            res.status(404).send('File not found');
+            return;
+        }
+
+        // Serve the file
+        res.sendFile(filePath);
+    });
+});
+
+
 
 const serve = () => app.listen(PORT, () => {
     logger.info(`🌏 Express server started at http://localhost:${PORT}`);
