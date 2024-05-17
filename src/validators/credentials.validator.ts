@@ -8,11 +8,10 @@ export const signup = async (req: Request, res: Response, next: () => void) => {
       .required()
       .label('email'),
     password: Joi.string().required().label('password'),
-    type: Joi.string().required().label('type'),
-    accountName: Joi.string().required().label('type'),
-    phoneNo: Joi.string().required().label('type'),
-    age: Joi.string().required().label('type'),
-    gender: Joi.string().required().label('type'),
+    accountName: Joi.string().label('accountName'),
+    phoneNo: Joi.string().required().label('phoneNo'),
+    age: Joi.string().required().label('age'),
+    gender: Joi.string().required().label('gender'),
   });
   const { error } = schema.validate(req.body);
   if (error) {

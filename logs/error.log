@@ -15,3 +15,5 @@
 {"consoleLoggerOptions":{"label":"API"},"level":"error","message":"Internal Server Error occurred while adding a new adming  , ValidationError: gender: Path `gender` is required.","service":"api","timestamp":"2024-04-27T11:48:22.114Z"}
 {"consoleLoggerOptions":{"label":"API"},"level":"error","message":"Internal Server Error occurred while adding a new adming  , ValidationError: gender: Path `gender` is required.","service":"api","timestamp":"2024-04-27T11:54:39.295Z"}
 {"consoleLoggerOptions":{"label":"API"},"level":"error","message":"Internal Server Error occurred while adding a new adming  , ValidationError: phoneNo: Path `phoneNo` is required.","service":"api","timestamp":"2024-04-27T12:14:45.796Z"}
+{"consoleLoggerOptions":{"label":"API"},"level":"error","message":"Internal Server Error occurred while adding a new adming  , Error: Illegal arguments: undefined, string","service":"api","timestamp":"2024-05-14T13:49:37.276Z"}
+{"consoleLoggerOptions":{"label":"API"},"level":"error","message":"Internal Server Error occurred while adding a new adming  , Error: Illegal arguments: undefined, string","service":"api","timestamp":"2024-05-14T13:49:45.770Z"}

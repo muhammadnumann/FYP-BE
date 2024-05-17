@@ -3,6 +3,10 @@ import Credentials from '../../models/Credentials';
 import Accounts from '../../models/Accounts';
 import logger from '../../logger';
 import bcryptjs from 'bcryptjs';
+import { generateOTP } from '../otp/otp.controller';
+import Otps from '../../models/otp';
+import sendEmail from '../../utils/sendEmails';
+import { createToken } from '../../helpers/jwt.helper';
 
 
 export const AddAccount = async (req: Request, res: Response) => {
@@ -31,10 +35,28 @@ export const AddAccount = async (req: Request, res: Response) => {
         message: 'User is successfully Added.',
         consoleLoggerOptions: { label: 'API' }
       });
+
+      // const otp = generateOTP(); // Generate a 6-digit OTP
+      // const newOTP = new Otps({ email, otp });
+      // await newOTP.save();
+
+      // // Send OTP via email
+      // await sendEmail({
+      //   to: email,
+      //   subject: 'Your OTP',
+      //   message: `<p>Your OTP is: <strong>${otp}</strong></p>`,
+      // });
+
+      const tokenObj = {
+        uid: createdUser.id,
+      };
+      const jwtToken = await createToken(tokenObj);
+
+
       return res.status(200).json({
         success: true,
-        userId: createdUser._id,
-        admin: createdAccount.toJSON(),
+        accountData: { email: email, id: createdUser._id, type: createdUser.type, name: accountName, },
+        userAuthToken: jwtToken,
         message: 'User is successfully Added.'
       });
     }

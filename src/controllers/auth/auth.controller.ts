@@ -61,9 +61,9 @@ export const login = async (req: Request, res: Response) => {
 
         return res.status(200).json({
           success: true,
-          user: { email: user.email, id: user._id, type: user.type, name: userDetail?.accountName, },
+          accountData: { email: user.email, id: user._id, type: user.type, name: userDetail?.accountName, },
           userAuthToken: jwtToken,
-          message: 'Successfully Added'
+          message: 'Successfully Login'
         });
       }
     }
@@ -85,6 +85,29 @@ export const updatePassword = async (req: Request, res: Response) => {
   const { email, oldpassword, newPassword, newPassword1 } = req.body;
 
   console.log(req.body)
+
+  if (newPassword !== newPassword1) {
+    logger.log({
+      level: 'debug',
+      message: "New Password and Confirm Password incorrect",
+      consoleLoggerOptions: { label: 'API' }
+    });
+    return res.status(200).json({
+      success: false,
+      message: "New Password and Confirm Password incorrect"
+    });
+  }
+  if (oldpassword === newPassword || oldpassword === newPassword1) {
+    logger.log({
+      level: 'debug',
+      message: "Old Password and New Password are same",
+      consoleLoggerOptions: { label: 'API' }
+    });
+    return res.status(200).json({
+      success: false,
+      message: "Old Password and new Password are same"
+    });
+  }
 
   try {
     const user = await Credentials.findOne({ email: email });
@@ -136,7 +159,7 @@ export const updatePassword = async (req: Request, res: Response) => {
 
         return res.status(200).json({
           success: true,
-          user: { email: user.email, id: user._id, type: user.type, name: userDetail?.accountName, },
+          accountData: { email: user.email, id: user._id, type: user.type, name: userDetail?.accountName, },
           message: 'Update Successfully'
         });
       }
@@ -155,11 +178,11 @@ export const updatePassword = async (req: Request, res: Response) => {
 };
 
 export const forgetPassword = async (req: Request, res: Response) => {
-  const { email, newPassword, newPassword1 } = req.body;
+  const { email, password, newPassword1 } = req.body;
   console.log(req.body)
   try {
     const user = await Credentials.findOne({ email: email });
-    const HASHED_PASSWORD = bcryptjs.hashSync(newPassword, 10);
+    const HASHED_PASSWORD = bcryptjs.hashSync(password, 10);
     const filter = { email };
     const updateDoc = {
       $set: {
@@ -175,11 +198,9 @@ export const forgetPassword = async (req: Request, res: Response) => {
       message: 'Update Successfully',
       consoleLoggerOptions: { label: 'API' }
     });
-
-
     return res.status(200).json({
       success: true,
-      user: { email: user?.email, id: user?._id, type: user?.type, name: userDetail?.accountName, },
+      accountData: { email: user?.email, id: user?._id, type: user?.type, name: userDetail?.accountName, },
       message: 'Update Successfully'
     });
   } catch (e) {

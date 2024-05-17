@@ -56,4 +56,4 @@ const verifyOTP = async (req: any, res: any, next: any) => {
 };
 
 
-export { verifyOTP, sendOTP }
+export { verifyOTP, sendOTP, generateOTP }
