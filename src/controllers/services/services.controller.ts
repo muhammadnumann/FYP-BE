@@ -7,12 +7,12 @@ const { spawnSync } = require('child_process');
 export const servicesList = async (req: Request, res: Response) => {
     console.log("Services List")
     console.log(req.body)
-    const { isReal, userId, pageNo, pageSize = 5 } = req.body;
+    const { isReal, userId, pageNo, pageSize = 5 } = req.query;
 
-    const skip = (pageNo - 1) * pageSize;
+    const skip = (Number(pageNo) - 1) * Number(pageSize);
     try {
         const services = await Services.find({ userId }).skip(skip)
-            .limit(pageSize);
+            .limit(Number(pageSize));
 
         return res.status(200).json({
             total: (await Services.find({ userId })).length,
