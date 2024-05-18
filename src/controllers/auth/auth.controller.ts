@@ -167,12 +167,12 @@ export const updatePassword = async (req: Request, res: Response) => {
   } catch (e) {
     logger.error({
       level: 'debug',
-      message: `Internal Server Error occurred while adding a new adming  , ${e}`,
+      message: `Internal Server Error occurred while adding a new admin  , ${e}`,
       consoleLoggerOptions: { label: 'API' }
     });
     return res.status(500).json({
       success: false,
-      message: 'Internal Server Error occurred while adding a new adming'
+      message: 'Internal Server Error occurred while adding a new admin'
     });
   }
 };
@@ -206,12 +206,12 @@ export const forgetPassword = async (req: Request, res: Response) => {
   } catch (e) {
     logger.error({
       level: 'debug',
-      message: `Internal Server Error occurred while adding a new adming  , ${e}`,
+      message: `Internal Server Error occurred while adding a new admin  , ${e}`,
       consoleLoggerOptions: { label: 'API' }
     });
     return res.status(500).json({
       success: false,
-      message: 'Internal Server Error occurred while adding a new adming'
+      message: 'Internal Server Error occurred while adding a new admin'
     });
   }
 };

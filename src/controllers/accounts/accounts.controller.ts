@@ -75,12 +75,12 @@ export const AddAccount = async (req: Request, res: Response) => {
   } catch (e) {
     logger.error({
       level: 'debug',
-      message: `Internal Server Error occurred while adding a new adming  , ${e}`,
+      message: `Internal Server Error occurred while adding a new admin  , ${e}`,
       consoleLoggerOptions: { label: 'API' }
     });
     return res.status(500).json({
       success: false,
-      message: 'Internal Server Error occurred while adding a new adming'
+      message: 'Internal Server Error occurred while adding a new admin'
     });
   }
 };
@@ -89,7 +89,7 @@ export const getAllAccounts = async (req: Request, res: Response) => {
   console.log('Get all Account')
 
   const { pageNo, pageSize = 5 } = req.body;
-  const skip = (pageNo - 1) * pageSize; 
+  const skip = (pageNo - 1) * pageSize;
   if (req.headers.authorization) {
     try {
       const token = req.headers.authorization.split(' ')[1];

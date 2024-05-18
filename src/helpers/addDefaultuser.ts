@@ -34,7 +34,7 @@ export const addAdminCredentials = async () => {
     } catch (e) {
         logger.error({
             level: 'debug',
-            message: `Internal Server Error occurred while adding a new adming  , ${e}`,
+            message: `Internal Server Error occurred while adding a new admin, ${e}`,
             consoleLoggerOptions: { label: 'API' }
         });
     }
