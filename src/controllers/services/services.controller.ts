@@ -7,7 +7,7 @@ const { spawnSync } = require('child_process');
 export const servicesList = async (req: Request, res: Response) => {
     console.log("Services List")
     console.log(req.body)
-    const { userId, pageNo, pageSize = 5 } = req.body;
+    const { isReal, userId, pageNo, pageSize = 5 } = req.body;
 
     const skip = (pageNo - 1) * pageSize;
     try {
@@ -15,7 +15,9 @@ export const servicesList = async (req: Request, res: Response) => {
             .limit(pageSize);
 
         return res.status(200).json({
-            total: services.length,
+            total: (await Services.find({ userId })).length,
+            pageSize,
+            pageNo,
             success: true,
             message: 'Fetch Successfully',
             services
@@ -49,7 +51,6 @@ export const addService = async (req: Request, res: Response) => {
     // python
 
     const { userId } = req.body;
-    console.log(userId)
     console.log(req?.file)
     try {
         const section = new Services({
@@ -57,6 +58,7 @@ export const addService = async (req: Request, res: Response) => {
             fileName: req?.file?.filename,
             filePath: req?.file?.destination,
             userId: userId,
+            isReal: true,
         })
         section.save()
         res.status(200).json(

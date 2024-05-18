@@ -7,10 +7,8 @@ import Credentials from '../models/Credentials'
 
 
 export async function isAuthorized(req: Request, res: Response, next: () => void) {
-  console.log("is Autherized")
-  // comment added
   if (req.headers.authorization) {
-    const token = req.headers.authorization.split(' ')[1];
+    const token = req.headers.authorization.split(' ')[1] || req.headers.authorization;
     try {
       const decodedToken: any = await verifyToken(token);
       if (decodedToken) {

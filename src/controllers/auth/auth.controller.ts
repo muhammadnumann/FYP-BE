@@ -82,11 +82,11 @@ export const login = async (req: Request, res: Response) => {
 
 
 export const updatePassword = async (req: Request, res: Response) => {
-  const { email, oldpassword, newPassword, newPassword1 } = req.body;
+  const { email, oldpassword, newPassword, confirmPassword } = req.body;
 
   console.log(req.body)
 
-  if (newPassword !== newPassword1) {
+  if (newPassword !== confirmPassword) {
     logger.log({
       level: 'debug',
       message: "New Password and Confirm Password incorrect",
@@ -97,7 +97,7 @@ export const updatePassword = async (req: Request, res: Response) => {
       message: "New Password and Confirm Password incorrect"
     });
   }
-  if (oldpassword === newPassword || oldpassword === newPassword1) {
+  if (oldpassword === newPassword || oldpassword === confirmPassword) {
     logger.log({
       level: 'debug',
       message: "Old Password and New Password are same",
