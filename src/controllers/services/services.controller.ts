@@ -53,7 +53,6 @@ export const addService = async (req: Request, res: Response) => {
     // python
 
     const { userId } = req.body;
-    console.log(req?.file)
     try {
         const section = new Services({
             orignalFileName: req?.file?.originalname,
