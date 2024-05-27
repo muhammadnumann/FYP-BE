@@ -4,6 +4,6 @@ import * as authMiddleware from '../../middleware/auth'
 
 const router = Router();
 
-router.post('/get-detail', authMiddleware.isAuthorized, Daashboard.GetDetail);
+router.get('/get-detail', authMiddleware.isAuthorized, Daashboard.GetDetail);
 
 export default router;
