@@ -13,7 +13,7 @@ export const servicesList = async (req: Request, res: Response) => {
 
     const skip = (Number(pageNo) - 1) * Number(pageSize);
     try {
-        const services = await Services.find({ userId }).skip(skip)
+        const services = await Services.find({ userId, isReal }).skip(skip)
             .limit(Number(pageSize));
 
         return res.status(200).json({
