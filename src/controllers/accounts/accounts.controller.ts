@@ -134,13 +134,13 @@ export const getAllAccounts = async (req: Request, res: Response) => {
   };
 }
 export const DeleteAccount = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { id } = req.query;
 
   console.log('Delete account')
 
   try {
     const account = await Accounts.updateOne(
-      { credentialId: id },
+      { credentialId: String(id) },
       { $set: { isDeleted: true } }
     )
     console.log(account)
