@@ -18,7 +18,7 @@ const GetDetail = async (req: any, res: any, next: any) => {
             console.log((await Services.find({ userId, isReal: true })).length)
             res.status(200).json({
                 success: true,
-                message: 'OTP sent successfully',
+                message: 'Fetch successfully',
                 data: {
                     all: (await Services.find({ userId })).length,
                     real: (await Services.find({ userId, isReal: true })).length,
