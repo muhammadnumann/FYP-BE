@@ -1,40 +1,50 @@
 import { Request, Response } from 'express';
 import logger from '../../logger';
 import Services from '../../models/services';
+import { verifyToken } from '../../helpers/jwt.helper';
 const { spawnSync } = require('child_process');
 
 
 export const servicesList = async (req: Request, res: Response) => {
     console.log("Services List")
-    console.log(req.body)
-    const { isReal, userId } = req.body
 
-    const { pageNo, pageSize = 5 } = req.query;
+    const { pageNo, pageSize = 5, isReal } = req.query;
 
     const skip = (Number(pageNo) - 1) * Number(pageSize);
-    try {
-        const services = await Services.find({ userId, isReal }).skip(skip)
-            .limit(Number(pageSize));
 
-        return res.status(200).json({
-            total: (await Services.find({ userId })).length,
-            pageSize,
-            pageNo,
-            success: true,
-            message: 'Fetch Successfully',
-            services
-        })
-    } catch (error) {
-        logger.error({
-            level: 'debug',
-            message: `${'Cant Find'} , ${error}`,
-            consoleLoggerOptions: { label: 'API' }
-        });
-        return res.status(404).json({
-            success: false,
-            message: 'Cant Find'
-        });
-    }
+    if (req.headers.authorization) {
+        try {
+            const token = req.headers.authorization.split(' ')[1];
+            const decodedToken: any = await verifyToken(token);
+            const userId: string = decodedToken?.uid;
+
+            const services = isReal !== undefined ? await Services.find({ userId, isReal }).skip(skip)
+                .limit(Number(pageSize)) : await Services.find({ userId }).skip(skip)
+                    .limit(Number(pageSize))
+
+            return res.status(200).json({
+                total: isReal !== undefined ? (await Services.find({ userId, isReal })).length : (await Services.find({ userId })).length,
+                pageSize,
+                pageNo,
+                success: true,
+                message: 'Fetch Successfully',
+                services
+            })
+
+        } catch (error) {
+            logger.error({
+                level: 'debug',
+                message: `${'Cant Find'} , ${error}`,
+                consoleLoggerOptions: { label: 'API' }
+            });
+            return res.status(404).json({
+                success: false,
+                message: 'Cant Find'
+            });
+        }
+    };
+
+
 
 };
 

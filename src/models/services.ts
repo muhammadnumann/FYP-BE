@@ -5,7 +5,7 @@ export interface Iservices extends ITimeStampedDocument {
   /** Name of the BLog Title */
   orignalFileName: string;
   fileName: string;
-  isReal: boolean;
+  userId: string;
 }
 const schema = new Schema<Iservices>({
   orignalFileName: { type: String, required: true },
