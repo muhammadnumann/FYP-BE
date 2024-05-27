@@ -134,7 +134,7 @@ export const getAllAccounts = async (req: Request, res: Response) => {
   };
 }
 export const DeleteAccount = async (req: Request, res: Response) => {
-  const { id } = req.body;
+  const { id } = req.params;
 
   console.log('Delete account')
 
