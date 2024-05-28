@@ -14,12 +14,17 @@ export const servicesList = async (req: Request, res: Response) => {
 
     if (req.headers.authorization) {
         try {
-            const token = req.headers.authorization.split(' ')[1];
+            const token = req.headers.authorization.split(' ')[1] || req.headers.authorization;
             const decodedToken: any = await verifyToken(token);
             const userId: string = decodedToken?.uid;
 
-            const services = isReal !== undefined ? await Services.find({ userId, isReal }).skip(skip)
-                .limit(Number(pageSize)) : await Services.find({ userId }).skip(skip)
+            const services = isReal !== undefined ? await Services.find({ userId, isReal })
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(Number(pageSize))
+                : await Services.find({ userId })
+                    .sort({ createdAt: -1 })
+                    .skip(skip)
                     .limit(Number(pageSize))
 
             return res.status(200).json({

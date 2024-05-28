@@ -137,7 +137,7 @@ export const DeleteAccount = async (req: Request, res: Response) => {
   const { id } = req.query;
 
   console.log('Delete account')
-
+  console.log(id)
   try {
     const account = await Accounts.updateOne(
       { credentialId: String(id) },

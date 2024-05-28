@@ -76,3 +76,6 @@
 {"consoleLoggerOptions":{"label":"API"},"level":"error","message":"Cant Find , CastError: Cast to ObjectId failed for value \"ase\" (type string) at path \"credentialId\" for model \"tbl-accounts\"","service":"api","timestamp":"2024-05-27T17:56:12.213Z"}
 {"consoleLoggerOptions":{"label":"API"},"level":"error","message":"Cant Find , CastError: Cast to ObjectId failed for value \"\"664735598ac3281f68b3b967\"\" (type string) at path \"credentialId\" for model \"tbl-accounts\"","service":"api","timestamp":"2024-05-27T17:56:39.612Z"}
 {"consoleLoggerOptions":{"label":"API"},"level":"error","message":"Cant Find , CastError: Cast to ObjectId failed for value \"\"664735598ac3281f68b3b967\"\" (type string) at path \"credentialId\" for model \"tbl-accounts\"","service":"api","timestamp":"2024-05-27T17:56:41.256Z"}
+{"consoleLoggerOptions":{"label":"API"},"level":"error","message":"Cant Find , JsonWebTokenError: jwt must be provided","service":"api","timestamp":"2024-05-28T15:53:05.660Z"}
+{"consoleLoggerOptions":{"label":"API"},"level":"error","message":"Cant Find , JsonWebTokenError: jwt must be provided","service":"api","timestamp":"2024-05-28T15:53:32.858Z"}
+{"consoleLoggerOptions":{"label":"API"},"level":"error","message":"Cant Find , JsonWebTokenError: jwt must be provided","service":"api","timestamp":"2024-05-28T15:53:48.441Z"}
