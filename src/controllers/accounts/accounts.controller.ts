@@ -101,7 +101,9 @@ export const getAllAccounts = async (req: Request, res: Response) => {
       const accounts = await Accounts.find({
         credentialId: { $ne: new mongoose.Types.ObjectId(currentCredentialId) },
         isDeleted: { $ne: true }
-      }).skip(skip)
+      })
+        .sort({ createdAt: -1 })
+        .skip(skip)
         .limit(Number(pageSize));
       ;
       logger.log({
