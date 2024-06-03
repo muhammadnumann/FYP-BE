@@ -22,9 +22,9 @@ const GetDetail = async (req: any, res: any, next: any) => {
                     success: true,
                     message: 'Fetch successfully',
                     data: {
-                        all: (await Services.find({ userId })).length,
-                        real: (await Services.find({ userId, isReal: true })).length,
-                        fake: (await Services.find({ userId, isReal: false })).length,
+                        all: (await Services.find()).length,
+                        real: (await Services.find({ isReal: true })).length,
+                        fake: (await Services.find({ isReal: false })).length,
                         deletedusers: (await Accounts.find({ isDeleted: true })).length,
                         totalusers: (await Accounts.find()).length
                     }
