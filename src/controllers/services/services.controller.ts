@@ -1,8 +1,11 @@
+import fs from 'fs';
 import { Request, Response } from 'express';
 import logger from '../../logger';
 import Services from '../../models/services';
 import { verifyToken } from '../../helpers/jwt.helper';
-const { spawnSync } = require('child_process');
+import path from 'path';
+import FormData from 'form-data';
+import axios from 'axios';
 
 
 export const servicesList = async (req: Request, res: Response) => {
@@ -55,35 +58,36 @@ export const servicesList = async (req: Request, res: Response) => {
 
 export const addService = async (req: Request, res: Response) => {
 
-    // const python = spawnSync('python',
-    //     [__dirname + '/script.py'],
-    //     { input: 'write this to stdin' });
-    // if (python.status !== 0) {
-    //     process.stderr.write(python.stderr);
-    //     process.exit(python.status);
-    // } else {
-    //     process.stdout.write(python.stdout);
-    //     process.stderr.write(python.stderr);
-    // }
-    // python
-
     const { userId } = req.body;
     try {
-        const section = new Services({
-            orignalFileName: req?.file?.originalname,
-            fileName: req?.file?.filename,
-            filePath: req?.file?.destination,
-            userId: userId,
-            isReal: true,
-        })
-        section.save()
-        res.status(200).json(
-            {
-                success: true,
-                message: 'Add Successfully',
-                audio: section
-            }
-        );
+        const formData = new FormData();
+        formData.append('file', fs.createReadStream('./uploads/' + req?.file?.filename), {
+            filename: req?.file?.filename,
+        });
+
+        await axios.post('http://127.0.0.1:8000', formData)
+            .then(response => {
+                console.log(response.data.isReal);
+                const section = new Services({
+                    orignalFileName: req?.file?.originalname,
+                    fileName: req?.file?.filename,
+                    filePath: req?.file?.destination,
+                    userId: userId,
+                    isReal: response?.data?.isReal,
+                })
+                section.save()
+                res.status(200).json(
+                    {
+                        success: true,
+                        message: 'Add Successfully',
+                        audio: section
+                    }
+                );
+            })
+            .catch(error => {
+                console.error(error);
+                res.status(500).send(error);
+            });
 
     } catch (err) {
         res.status(500).send(err);
