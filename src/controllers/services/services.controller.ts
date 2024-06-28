@@ -21,10 +21,11 @@ export const servicesList = async (req: Request, res: Response) => {
             const decodedToken: any = await verifyToken(token);
             const userId: string = decodedToken?.uid;
 
-            const services = isReal !== undefined ? await Services.find({ userId, isReal })
-                .sort({ createdAt: -1 })
-                .skip(skip)
-                .limit(Number(pageSize))
+            const services = isReal !== undefined ?
+                await Services.find({ userId, isReal })
+                    .sort({ createdAt: -1 })
+                    .skip(skip)
+                    .limit(Number(pageSize))
                 : await Services.find({ userId })
                     .sort({ createdAt: -1 })
                     .skip(skip)
@@ -93,7 +94,6 @@ export const addService = async (req: Request, res: Response) => {
         res.status(500).send(err);
     }
 };
-
 
 export const FindOneService = async (req: Request, res: Response) => {
     const id = req.params['0']

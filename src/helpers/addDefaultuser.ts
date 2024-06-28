@@ -8,17 +8,12 @@ export const addAdminCredentials = async () => {
     try {
         const saltRounds = 10;
         const { email, password, type, accountName, phoneNo, age, gender } = {
-            email: 'admin@admin.com', password: '12345', type: 'admin',
+            email: 'numan.rfa@gmail.com', password: 'Bitf10m030', type: 'admin',
             accountName: "Admin", phoneNo: '03244734494', age: 22, gender: "Male"
         };
-
         const HASHED_PASSWORD = bcryptjs.hashSync(password, saltRounds);
-
-
         const userCredential = await Credentials.findOne({ email });
-        if (userCredential) {
-
-        }
+        if (userCredential) { }
         else {
             const createdUser = new Credentials({ email, password: HASHED_PASSWORD, type })
             await createdUser.save();

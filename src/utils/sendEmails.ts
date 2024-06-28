@@ -7,8 +7,8 @@ const sendEmail = async (options: any) => {
         service: 'gmail',
         secure: false, // Use SSL
         auth: {
-            user: 'numan.rfa@gmail.com',
-            pass: 'thazthwydtetqnvy',
+            user: 'auddetect@gmail.com',
+            pass: 'etwqoxkztfrobtgs',
         },
         secureConnection: false, // TLS requires secureConnection to be false
         tls: {
